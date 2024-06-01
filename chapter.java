@@ -11,6 +11,27 @@ public class Association {
 }
 
 @Entity
+public class Chapter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String district;
+
+    @OneToOne
+    @JoinColumn(name = "president_id")
+    private Member president;
+
+    @OneToMany(mappedBy = "chapter")
+    private List<Member> members;
+
+    @ManyToOne
+    @JoinColumn(name = "association_id")
+    private Association association;
+}
+
+@Entity
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +43,6 @@ public class Member {
     private MemberStatus status;
 
     private Date renewalDate;
-
-    @ManyToOne
-    @JoinColumn(name = "association_id")
-    private Association association;
 
     @ManyToOne
     @JoinColumn(name = "chapter_id")
