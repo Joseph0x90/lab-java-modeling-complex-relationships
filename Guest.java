@@ -1,50 +1,60 @@
-import javax.persistence.*;
-import java.util.List;
-
 @Entity
-public class Association {
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private Date date;
+    private int duration;
+    private String location;
+    private String title;
 
-    @OneToMany(mappedBy = "association")
-    private List<Chapter> chapters;
+    @OneToMany(mappedBy = "event")
+    private List<Guest> guests;
 }
 
 @Entity
-public class Chapter {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
-    private String district;
-
-    @OneToOne
-    @JoinColumn(name = "president_id")
-    private Member president;
-
-    @OneToMany(mappedBy = "chapter")
-    private List<Member> members;
-
-    @ManyToOne
-    @JoinColumn(name = "association_id")
-    private Association association;
+public class Conference extends Event {
+    @OneToMany(mappedBy = "conference")
+    private List<Speaker> speakers;
 }
 
 @Entity
-public class Member {
+public class Exposition extends Event {
+}
+
+@Entity
+public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    private String status;
-    private Date renewalDate;
+
+    @Enumerated(EnumType.STRING)
+    private ResponseStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "chapter_id")
-    private Chapter chapter;
+    @JoinColumn(name = "event_id")
+    private Event event;
+}
+
+@Entity
+public class Speaker {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private int presentationDuration;
+
+    @ManyToOne
+    @JoinColumn(name = "conference_id")
+    private Conference conference;
+}
+
+public enum ResponseStatus {
+    ATTENDING,
+    NOT_ATTENDING,
+    NO_RESPONSE
 }
