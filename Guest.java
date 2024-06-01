@@ -20,10 +20,6 @@ public class Conference extends Event {
 }
 
 @Entity
-public class Exposition extends Event {
-}
-
-@Entity
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +47,12 @@ public class Speaker {
     @ManyToOne
     @JoinColumn(name = "conference_id")
     private Conference conference;
+
+}
+
+public enum MemberStatus {
+    ACTIVE,
+    LAPSED
 }
 
 public enum ResponseStatus {
