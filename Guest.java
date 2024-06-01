@@ -1,58 +1,50 @@
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "event_type")
-public abstract class Event {
+public class Association {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date date;
-    private int duration;
-    private String location;
-    private String title;
+    private String name;
 
-    @OneToMany(mappedBy = "event")
-    private List<Guest> guests;
+    @OneToMany(mappedBy = "association")
+    private List<Chapter> chapters;
 }
 
 @Entity
-@DiscriminatorValue("Conference")
-public class Conference extends Event {
-    @OneToMany(mappedBy = "conference")
-    private List<Speaker> speakers;
+public class Chapter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String district;
+
+    @OneToOne
+    @JoinColumn(name = "president_id")
+    private Member president;
+
+    @OneToMany(mappedBy = "chapter")
+    private List<Member> members;
+
+    @ManyToOne
+    @JoinColumn(name = "association_id")
+    private Association association;
 }
 
 @Entity
-@DiscriminatorValue("Exposition")
-public class Exposition extends Event {
-}
-
-@Entity
-public class Guest {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String status;
+    private Date renewalDate;
 
     @ManyToOne
-    private Event event;
-}
-
-@Entity
-public class Speaker {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
-    private int presentationDuration;
-
-    @ManyToOne
-    private Conference conference;
+    @JoinColumn(name = "chapter_id")
+    private Chapter chapter;
 }
